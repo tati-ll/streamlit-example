@@ -61,9 +61,7 @@ st.title("Búsqueda de Libro:")
 coincidencias = obtener_coincidencias("")
 
 # Mostrar las primeras 5 coincidencias en un cuadro desplegable (dropdown)
-# libro_seleccionado = st.selectbox("Seleccione el libro:", coincidencias["Book"].tolist(), index=0)
-# Mostrar las primeras 5 coincidencias en un cuadro de opciones (radio)
-libro_seleccionado = st.radio("Seleccione el libro:", coincidencias["Book"].tolist(), index=0)
+libro_seleccionado = st.selectbox("Seleccione el libro:", coincidencias["Book"].tolist(), index=0)
 
 def obtener_coincidencias(libro_seleccionado):
     return books[books["Book"].str.contains(libro_seleccionado, case=False)]
