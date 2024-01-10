@@ -4,13 +4,19 @@ import pandas as pd
 import streamlit as st
 from funciones import playlist_popularity
 
+@st.cache_data
+def carga_dataset():
+    # Ruta al archivo CSV
+    ruta_books = "books_sentiment.csv"
+    ruta_songs = "songs_sentiment.csv"
 
-ruta_books = 'books_sentiment.csv'
-ruta_songs = 'songs_sentiment.csv'
+    # Cargar datos desde el archivo CSV
+    books = pd.read_csv(ruta_books)
+    songs = pd.read_csv(ruta_songs)
 
-books = pd.read_csv(ruta_books)
-songs = pd.read_csv(ruta_songs)
+    return books, songs
 
+books, songs = carga_dataset()
 
 def obtener_coincidencias(titulo_ingresado):
     return books[books["Book"].str.contains(titulo_ingresado, case=False)]
@@ -28,9 +34,15 @@ def obtener_coincidencias(libro_seleccionado):
     return books[books["Book"].str.contains(libro_seleccionado, case=False)]
 
 # Botón para generar la playlist
+if st.button("Generar Playlist"):
+    # Resultados de la función basada en el título del libro
+    libro = libro_seleccionado
+    resultados_playlist = playlist_popularity(libro_seleccionado, books, songs)
 
-# Utilizar la función para obtener la playlist
-playlist1 = playlist_popularity(libro_seleccionado, books, songs)
+    uri= resultados_playlist['URI'].tolist()
+
+    # Mostrar resultados en Streamlit
+    st.write(resultados_playlist[['track_name','track_artist','URI']])
 """
 # Welcome to Streamlit!
 
