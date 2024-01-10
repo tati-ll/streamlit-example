@@ -28,6 +28,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+col1, col2 = st.columns(2)
+
+with col1:
+   st.title(":blue[BOOKBEAT]")
+   st.markdown(''':blue[***¡Disfruta de tus libros favoritos con la banda sonora perfecta!***]''')
+
+with col2:
+   st.image("bookbeat.png")
+
 @st.cache_data
 def carga_dataset():
     # Ruta al archivo CSV
