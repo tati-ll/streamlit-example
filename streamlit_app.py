@@ -17,11 +17,11 @@ st.markdown("""
             background-color: #282828;
             color: #fff;
         }
-        .stButton {
+        .stButton>button {
             background-color: #1DB954;
             color: #fff;
         }
-        .stButton:hover {
+        .stButton>button:hover {
             background-color: #25d366;
         }
         /* Puedes agregar más estilos según sea necesario */
