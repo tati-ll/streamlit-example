@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-import spotipy
+# import spotipy
 from funciones import playlist_popularity
 from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.oauth2 import SpotifyOAuth
