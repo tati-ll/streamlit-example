@@ -2,7 +2,35 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+from funciones import playlist_popularity
 
+
+ruta_books = '/home/tati_llana/code/tati-ll/Pruebas_streamlit/books_sentiment.csv'
+ruta_songs = '/home/tati_llana/code/tati-ll/Pruebas_streamlit/songs_sentiment.csv'
+
+books = pd.read_csv(ruta_books)
+songs = pd.read_csv(ruta_songs)
+
+
+def obtener_coincidencias(titulo_ingresado):
+    return books[books["Book"].str.contains(titulo_ingresado, case=False)]
+
+# Configuración de la página
+st.title("Búsqueda de Libro:")
+
+# Obtener coincidencias del DataFrame
+coincidencias = obtener_coincidencias("")
+
+# Mostrar las primeras 5 coincidencias en un cuadro desplegable (dropdown)
+libro_seleccionado = st.selectbox("Seleccione el libro:", coincidencias["Book"].tolist(), index=0)
+
+def obtener_coincidencias(libro_seleccionado):
+    return books[books["Book"].str.contains(libro_seleccionado, case=False)]
+
+# Botón para generar la playlist
+
+# Utilizar la función para obtener la playlist
+playlist1 = playlist_popularity(libro_seleccionado, books, songs)
 """
 # Welcome to Streamlit!
 
