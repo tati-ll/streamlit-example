@@ -28,6 +28,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+col1, col2 = st.columns(2)
+
+with col1:
+   st.title(":blue[BOOKBEAT]")
+   st.markdown(''':blue[***¡Disfruta de tus libros favoritos con la banda sonora perfecta!***]''')
+
+with col2:
+   st.image("bookbeat.png")
+
 @st.cache_data
 def carga_dataset():
     # Ruta al archivo CSV
@@ -51,21 +60,28 @@ st.title("Búsqueda de Libro:")
 # Obtener coincidencias del DataFrame
 coincidencias = obtener_coincidencias("")
 
-# Mostrar las primeras 5 coincidencias en un cuadro desplegable (multiselect)
-libros_seleccionados = st.multiselect("Seleccione el libro:", coincidencias["Book"].tolist(), default=coincidencias["Book"].tolist()[:5])
+# Mostrar las primeras 5 coincidencias en un cuadro desplegable (dropdown)
+# libro_seleccionado = st.selectbox("Seleccione el libro:", coincidencias["Book"].tolist(), index=0)
+# Mostrar las primeras 5 coincidencias en un cuadro de opciones (radio)
+libro_seleccionado = st.radio("Seleccione el libro:", coincidencias["Book"].tolist(), index=0)
 
-def obtener_coincidencias(libros_seleccionados):
-    return books[books["Book"].str.contains('|'.join(libros_seleccionados), case=False)]
+def obtener_coincidencias(libro_seleccionado):
+    return books[books["Book"].str.contains(libro_seleccionado, case=False)]
 
 # Botón para generar la playlist
 if st.button("Generar Playlist"):
     # Resultados de la función basada en el título del libro
-    resultados_playlist = playlist_popularity(libros_seleccionados, books, songs)
+    libro = libro_seleccionado
+    resultados_playlist = playlist_popularity(libro_seleccionado, books, songs)
 
-    uri = resultados_playlist['URI'].tolist()
+    uri= resultados_playlist['URI'].tolist()
 
     # Mostrar resultados en Streamlit
-    st.write(resultados_playlist[['track_name', 'track_artist', 'URI']])
+    st.write(resultados_playlist[['track_name','track_artist','URI']])
+
+
+
+
 
 
 
