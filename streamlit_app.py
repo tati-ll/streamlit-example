@@ -5,8 +5,8 @@ import streamlit as st
 from funciones import playlist_popularity
 
 
-ruta_books = '/home/tati_llana/code/tati-ll/Pruebas_streamlit/books_sentiment.csv'
-ruta_songs = '/home/tati_llana/code/tati-ll/Pruebas_streamlit/songs_sentiment.csv'
+ruta_books = 'books_sentiment.csv'
+ruta_songs = 'songs_sentiment.csv'
 
 books = pd.read_csv(ruta_books)
 songs = pd.read_csv(ruta_songs)
