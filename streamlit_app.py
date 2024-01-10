@@ -37,17 +37,17 @@ SPOTIPY_CLIENT_ID = '2c6e83abacec42e5b9dd16073017a179'
 SPOTIPY_CLIENT_SECRET = 'c21f09ef530643ca9055aa35dd081819'
 
 # Sets up authentication and scope.
-auth_manager = SpotifyOAuth(scope="playlist-modify-public",
-                            open_browser=False)
+# auth_manager = SpotifyOAuth(scope="playlist-modify-public",
+#                             open_browser=False)
 
-auth_manager.get_authorize_url()
+# auth_manager.get_authorize_url()
 
-# sp = spotipy.Spotify(
-#     auth_manager=SpotifyClientCredentials (
-#         client_id = SPOTIPY_CLIENT_ID,
-#         client_secret = SPOTIPY_CLIENT_SECRET
-#     )
-# )
+sp = spotipy.Spotify(
+    auth_manager=SpotifyClientCredentials (
+        client_id = SPOTIPY_CLIENT_ID,
+        client_secret = SPOTIPY_CLIENT_SECRET
+    )
+)
 
 col1, col2 = st.columns(2)
 
