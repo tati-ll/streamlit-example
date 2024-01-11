@@ -1,29 +1,21 @@
 from spotipy import Spotify
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import pandas as pd
 import streamlit as st
 import webbrowser
 import json
+from spotyfyAPI import get_token
 
 from funciones import playlist_popularity
 
 #Spotify API
 # Obtener el client ID y el client secret
-client_id = "2c6e83abacec42e5b9dd16073017a179"
-client_secret = "c21f09ef530643ca9055aa35dd081819"
+client_id = st.secrets['SPOTIFY_CLIENT_ID']
+client_secret = st.secrets['SPOTIFY_CLIENT_SECRET']
 
-# Obtener el token de acceso
-auth_manager = SpotifyOAuth(client_id, client_secret, redirect_uri="http://localhost:8501")
-auth_url = auth_manager.get_authorize_url()
+sp = Spotify(auth_manager=SpotifyClientCredentials())
+token  = get_token(client_id,client_secret)
 
-# Abrir un navegador web con la URL de autorización
-webbrowser.open(auth_url)
-
-# Obtener el código de autorización
-code = input("Ingrese el código de autorización: ")
-
-# Intercambiar el código de autorización por un token de acceso
-token = auth_manager.get_access_token(code)
 
 # Almacenar el token de acceso
 with open("token.json", "w") as f:
