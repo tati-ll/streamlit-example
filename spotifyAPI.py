@@ -9,6 +9,50 @@ import random
 _STKEY = 'ST_OAUTH'
 _DEFAULT_SECKEY = 'oauth'
 
+from spotipy.oauth2 import SpotifyOAuth
+import webbrowser
+from spotipy import Spotify
+
+def authenticate_spotify_user(client_id, client_secret, redirect_uri, scope='playlist-modify-private'):
+    """
+    Autentica al usuario en Spotify y devuelve el objeto Spotify.
+
+    Parameters:
+    - client_id: str, ID de cliente de tu aplicación en Spotify.
+    - client_secret: str, Secreto de cliente de tu aplicación en Spotify.
+    - redirect_uri: str, URI de redirección configurado en la aplicación de Spotify.
+    - scope: str, Alcance de permisos que necesitas. Por defecto, 'playlist-modify-private'.
+
+    Returns:
+    - spotipy.Spotify, Objeto Spotify autenticado.
+    """
+    auth_manager = SpotifyOAuth(
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri,
+        scope=scope
+    )
+
+    # Obtener el token de acceso o abrir la ventana del navegador para la autenticación.
+    try:
+        token_info = auth_manager.get_access_token()
+    except:
+        auth_url = auth_manager.get_authorize_url()
+        webbrowser.open(auth_url)
+        token_info = auth_manager.get_access_token()
+
+    # Crear un objeto Spotify autenticado.
+    spotify = Spotify(auth=token_info['access_token'])
+
+    return spotify
+
+# Uso de la función para autenticar al usuario
+SPOTIFY_CLIENT_ID = st.secrets['SPOTIFY_CLIENT_ID']
+SPOTIFY_CLIENT_SECRET = st.secrets['SPOTIFY_CLIENT_SECRET']
+REDIRECT_URI = "http://localhost:8501/callback/"  # Asegúrate de que coincida con la configuración de tu aplicación en Spotify
+
+spotify = authenticate_spotify_user(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, REDIRECT_URI)
+
 @st.cache_resource(ttl=300)
 def qparms_cache(key):
     return {}

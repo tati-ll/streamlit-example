@@ -1,7 +1,7 @@
 from spotipy import Spotify
 import pandas as pd
 import streamlit as st
-from spotifyAPI import st_oauth, _STKEY
+from spotifyAPI import authenticate_spotify_user
 
 from funciones import playlist_popularity
 
@@ -64,8 +64,7 @@ button = st.button("Generar Playlist")
 
 try:
     st.write('Prueba')
-    st_oauth(config=config, label='Start by Logging into Spotify', but=but)
-    spotify = Spotify(st.session_state[_STKEY]["access_token"])
+    spotify = authenticate_spotify_user(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET, redirect_uri=REDIRECT_URI)
     but.write(f"Authenticated successfully as **{spotify.me()['display_name']}")
 except:
     spotify = None
