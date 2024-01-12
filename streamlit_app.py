@@ -1,10 +1,6 @@
 from spotipy import Spotify
-from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import pandas as pd
 import streamlit as st
-import webbrowser
-import json
-from spotifyAPI import get_token
 from spotifyAPI import st_oauth, _STKEY
 
 from funciones import playlist_popularity
