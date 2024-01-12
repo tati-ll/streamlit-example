@@ -9,7 +9,7 @@ from funciones import playlist_popularity
 # Obtener el client ID y el client secret
 SPOTIFY_CLIENT_ID = st.secrets['SPOTIFY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET = st.secrets['SPOTIFY_CLIENT_SECRET']
-REDIRECT_URI = "http://localhost:8501/"
+REDIRECT_URI = st.secrets['REDIRECT_URI']
 
 st.set_page_config(
     page_title="BookBeat",

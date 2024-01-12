@@ -46,6 +46,7 @@ def authenticate_spotify_user(client_id, client_secret, redirect_uri, scope='pla
 
     return spotify
 
+
 # Uso de la función para autenticar al usuario
 SPOTIFY_CLIENT_ID = st.secrets['SPOTIFY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET = st.secrets['SPOTIFY_CLIENT_SECRET']
