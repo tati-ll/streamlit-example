@@ -4,31 +4,37 @@ import pandas as pd
 import streamlit as st
 import webbrowser
 import json
-from spotyfyAPI import get_token
+from spotifyAPI import get_token
+from spotifyAPI import st_oauth, _STKEY
 
 from funciones import playlist_popularity
 
 #Spotify API
 # Obtener el client ID y el client secret
-client_id = st.secrets['SPOTIFY_CLIENT_ID']
-client_secret = st.secrets['SPOTIFY_CLIENT_SECRET']
+SPOTIFY_CLIENT_ID = st.secrets['SPOTIFY_CLIENT_ID']
+SPOTIFY_CLIENT_SECRET = st.secrets['SPOTIFY_CLIENT_SECRET']
+REDIRECT_URI = "http://localhost:8501/callback/"
 
-sp = Spotify(auth_manager=SpotifyClientCredentials())
-token  = get_token(client_id,client_secret)
+st.set_page_config(
+    page_title="BookBeat",
+    page_icon="book",
+    layout="wide",
+)
 
+# Title and gif
+config = {
+    "authorization_endpoint": "https://accounts.spotify.com/authorize",
+    "token_endpoint": "https://accounts.spotify.com/api/token",
+    "redirect_uri": REDIRECT_URI,
+    "client_id": SPOTIFY_CLIENT_ID,
+    "client_secret": SPOTIFY_CLIENT_SECRET,
+    "scope": "playlist-modify-private",
+}
 
-# Almacenar el token de acceso
-with open("token.json", "w") as f:
-    f.write(json.dumps(token))
+st.title(":blue[BOOKBEAT]")
+but, img = st.columns([0.5, 0.5])
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.title(":blue[BOOKBEAT]")
-    st.markdown(''':blue[***¡Disfruta de tus libros favoritos con la banda sonora perfecta!***]''')
-
-with col2:
-    st.image("bookbeat.png")
+img.image("bookbeat.png")
 
 @st.cache_data
 def carga_dataset():
@@ -58,12 +64,50 @@ def obtener_coincidencias(libro_seleccionado):
     return books[books["Book"].str.contains(libro_seleccionado, case=False)]
 
 # Botón para generar la playlist
-if st.button("Generar Playlist"):
-    # Resultados de la función basada en el título del libro
-    libro = libro_seleccionado
-    resultados_playlist = playlist_popularity(libro, books, songs)
+button = st.button("Generar Playlist")
 
-    uri= resultados_playlist['URI'].tolist()
+try:
+    but.image('https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png', width=100)
+    st_oauth(config=config, label='Start by Logging into Spotify', but=but)
+    spotify = Spotify(st.session_state[_STKEY]["access_token"])
+    but.write(f"Authenticated successfully as **{spotify.me()['display_name']}")
+except:
+    spotify = None
+    st.error("Unable to authenticate with Spotify.")
 
-    # Mostrar resultados en Streamlit
-    st.write(resultados_playlist[['track_name','track_artist','URI']])
+playlist_name = f'Playlist to read "{libro_seleccionado}"'
+
+if spotify:
+    button = st.button("Generar Playlist")
+    if button:
+        # Resultados de la función basada en el título del libro
+        libro = libro_seleccionado
+        resultados_playlist = playlist_popularity(libro, books, songs)
+        uris= resultados_playlist['URI'].tolist()
+        try:
+            book_playlist = spotify.user_playlist_create(
+                        user=spotify.current_user()["id"],
+                        name=playlist_name,
+                        public=False,
+                        collaborative=False,
+                        description=f'Playlist to read "{libro_seleccionado}", generated with BookBeat.',
+                    )
+        except Exception as e:
+            st.error(f"Error creating playlist: {e}")
+
+        if book_playlist:
+            st.success("Successfully created playlist!")
+            try:
+                spotify.user_playlist_add_tracks(
+                    user=spotify.current_user()["id"],
+                    playlist_id=book_playlist["id"],
+                    tracks=uris)
+            except Exception as e:
+                st.error(f"Error adding tracks to playlist: {e}")
+
+            st.success("Successfully added tracks to playlist!")
+            st.write(
+                        f"Check out your playlist [here]({book_playlist['external_urls']['spotify']})."
+                    )
+        else:
+            st.error("Unable to authenticate with Spotify.")
