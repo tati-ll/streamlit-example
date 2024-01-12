@@ -64,7 +64,7 @@ button = st.button("Generar Playlist")
 
 try:
     st.write('Prueba')
-    spotify = authenticate_spotify_user(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET, redirect_uri=REDIRECT_URI)
+    spotify = authenticate_spotify_user(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET, redirect_uri=REDIRECT_URI, scope='playlist-modify-private')
     but.write(f"Authenticated successfully as **{spotify.me()['display_name']}")
 except:
     spotify = None
