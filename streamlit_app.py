@@ -63,6 +63,7 @@ def obtener_coincidencias(libro_seleccionado):
 button = st.button("Generar Playlist")
 
 try:
+    st.write('Prueba')
     st_oauth(config=config, label='Start by Logging into Spotify', but=but)
     spotify = Spotify(st.session_state[_STKEY]["access_token"])
     but.write(f"Authenticated successfully as **{spotify.me()['display_name']}")
