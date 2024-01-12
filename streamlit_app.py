@@ -63,7 +63,6 @@ def obtener_coincidencias(libro_seleccionado):
 button = st.button("Generar Playlist")
 
 try:
-    but.image('https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png', width=100)
     st_oauth(config=config, label='Start by Logging into Spotify', but=but)
     spotify = Spotify(st.session_state[_STKEY]["access_token"])
     but.write(f"Authenticated successfully as **{spotify.me()['display_name']}")
